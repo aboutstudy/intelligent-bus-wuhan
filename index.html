@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<script tyle="txt/javascript">
+	function fetchData(data){
+		if(data.status === 200){
+			var html = '';
+			$.each(data.data.map, function(index, val){
+            	html += '<div class="item" id="' + val.stopNo + '">';
+                html += '<span class="site">' + val.stopName + '</span>';
+                html += '<span class="bus">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+                html += '</div>';
+				
+			});
+			$('.site_list').html(html);
+
+			$.each(data.data.bus, function(index, val){
+				$('#' + val.stopId).addClass('arrived');
+			});
+		}
+		else if(data.status === 404){
+			$('.site_list').html("暂无该线路数据");
+		}
+		else{
+			$('.site_list').html(data.msg);
+		}
+	}
+
+    function loadJS(src){
+        var script = document.createElement('script');
+        script.setAttribute("type","text/javascript");
+        script.src = src;
+        document.body.appendChild(script);
+    }
+
+	function doSearch(){
+		var lineNo = $('input[name=lineNo]').val();
+		if(parseInt(lineNo)){
+			$('.site_list').html('查询中...');
+			var  direction = $('input[name=direction]:checked').val() ? 1 : 0;
+			var timeObj = new Date();
+			loadJS('http://me.doucl.com/ibus.php?&lineNo=' + lineNo + '&direction=' + direction + '&hash=' + timeObj.getTime());
+		}
+		else{
+			$('input[name=lineNo]').focus();
+			$('.site_list').html('请确认公交线路');
+		}
+	}
+</script>
+
+<script tyle="txt/javascript">
+	$(document).ready(function(){
+		$('#doSubmit').click(function(){
+			doSearch();
+		});
+
+		$('#direction').click(function(){
+			var lineNo = $('input[name=lineNo]').val();
+			if(lineNo){
+				doSearch();
+			}
+		});
+
+		$('#doSubmit').click();
+	});
+</script>
+<title>武汉智能公交 WEB非官方版</title>
+<style type="text/css">
+.container .main .site_list .item {
+	border-left-width: 2px;
+	border-left-style: solid;
+	border-left-color: #060;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #060;
+	line-height: 18px;
+}
+.container .main .site_list .item .site {
+	font-size: 12px;
+	padding-right: 10px;
+	padding-left: 3px;
+}
+.container .main .site_list .item .bus {
+	font-weight: bold;
+	color: #F00;
+	font-size: 12px;
+}
+.container .main .site_list .arrived {
+	color: #FFF;
+	background-color: #060;
+}
+.container .main {
+	border: 1px solid #060;
+	font-size: 12px;
+}
+.container .main .options {
+	font-size: 12px;
+	padding-left: 3px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #060;
+	border-right-color: #060;
+	border-bottom-color: #060;
+	border-left-color: #060;
+}
+.container .main .options #direction {
+	margin-left: -4px;
+}
+.container .main .options #lineNo {
+	margin-left: -1px;
+}
+.container .main .site_list .item.arrived .bus {
+	background-image: url(bus.png);
+	background-repeat: no-repeat;
+	width: 30px;
+}
+</style>
+</head>
+
+<body>
+    <div class="container">
+    	<div class="header"></div>
+        <div class="main">
+        	<div class="options">
+            	<label for="direction">反向</label>
+            	<input type="checkbox" id="direction" name="direction" value="1"/>
+                <label for="lineNo">线路</label>
+            	<input type="text" name="lineNo" id="lineNo" value="810" />
+            	<button id="doSubmit">查询</button>                
+    </div>
+        	<div class="site_list">
+            	<center>武汉智能公交查询非官方版</center>
+            	<!--
+            	<div class="item">
+                	<span class="site">关南站</span>
+                    <span class="bus"></span>
+                </div>
+				<div class="item">
+               	  <span class="site">关南站</span>
+                    <span class="bus"></span>
+                </div>
+	    		<div class="item arrived">
+               	  <span class="site">关南站</span>
+                    <span class="bus">X</span>
+                </div>
+	    		<div class="item">
+               	  <span class="site">关南站</span>
+                    <span class="bus"></span>
+                </div> 
+                -->                                               
+          </div>
+      </div>
+    </div>
+</body>
+</html>
